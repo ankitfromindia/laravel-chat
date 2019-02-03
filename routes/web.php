@@ -1,5 +1,8 @@
 <?php
 
+use App\Channel;
+use App\User;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -12,5 +15,18 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    $channel = str_random();
+    Channel::create([
+       'user_id' =>  User::inRandomOrder()->first()->id,
+       'channel' => $channel
+    ]);
+    
+    return view('welcome')->withChannel($channel);
+    
+    
 });
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
+Route::resource('/messages', 'MessageController');
